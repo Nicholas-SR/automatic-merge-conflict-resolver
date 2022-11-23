@@ -1,0 +1,3 @@
+[mergetool "amcr"]
+    cmd = py src/amcr.py "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    trustExitCode = true
