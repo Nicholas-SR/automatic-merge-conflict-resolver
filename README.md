@@ -1,4 +1,5 @@
 # automatic-merge-conflict-resolver
+Work In Progress
 Automatic Merge Conflict Resolver automatically resolves common git merge conflicts.
 
 # Setup
