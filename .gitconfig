@@ -1,0 +1,8 @@
+[mergetool "amcr"]
+    # uncomment below for Mac/Linux
+    # cmd = python3 src/amcr.py "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    
+    # uncomment below for Windows
+    cmd = py src/amcr.py "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+
+    trustExitCode = true
