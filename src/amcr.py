@@ -90,7 +90,18 @@ def processConflicts(conflicts, input):
             print("isFunctionDefinitionNameConflict")
             handleFunctionDefinitionNameConflict(
                 local, remote, input, conflictStart, conflictEnd)
-
+        elif isFunctionSignatureConflict(localDiff, remoteDiff):
+            print("isFunctionSignatureConflict")
+            handleFunctionSignatureConflict()
+        elif isFormattingConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
+            print("isFormattingConflict")
+            handleFormattingConflict()
+        elif isWhitespaceConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
+            print("isWhitespaceConflict")
+            handleWhitespaceConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd)
+        elif isSpacingConflict(localDiff, remoteDiff):
+            print("isSpacingConflict")
+            handleSpacingConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd)
         else:
             print("isElseConflict")
             handleElseConflict(
@@ -127,6 +138,72 @@ def isVariableNameConflict(localDiff, remoteDiff):
     except:
         return False
 
+    
+def isFunctionSignatureConflict(localDiff, remoteDiff):
+    # Extract function signatures from local and remote parts
+    localSignature = re.search("(?<=def )\w+\([^\)]*\)", localDiff)
+    remoteSignature = re.search("(?<=def )\w+\([^\)]*\)", remoteDiff)
+
+    if not localSignature or not remoteSignature:
+        # The merge conflict does not involve a function
+        return False
+
+    # Extract parameter lists from local and remote function signatures
+    localParams = re.search("\((.*?)\)", localSignature.group()).group(1)
+    remoteParams = re.search("\((.*?)\)", remoteSignature.group()).group(1)
+
+    if localParams == remoteParams:
+        # The function signature conflict does not involve new parameters
+        return False
+
+    # Check if a new parameter was added to the remote function signature
+    if remoteParams.startswith(localParams):
+        new_param = remoteParams[len(localParams):].split(",")[0].strip()
+        return True
+
+    return False
+
+
+def isFormattingConflict(localDiff, remoteDiff):
+
+    # Strip formatting from local and remote parts
+    localStripped = re.sub("[\s\n]+", "", localDiff)
+    remoteStripped = re.sub("[\s\n]+", "", remoteDiff)
+
+    # Compare stripped local and remote parts
+    return localStripped == remoteStripped
+
+
+def isWhitespaceConflict(local, remote):
+    # Remove leading/trailing whitespace and split lines
+    localLines = [line.strip() for line in local.split("\n")]
+    remoteLines = [line.strip() for line in remote.split("\n")]
+
+    # Check if there are any lines with whitespace differences
+    for i, line in enumerate(localLines):
+        if line != remoteLines[i]:
+            return True
+
+    return False
+
+
+def isSpacingConflict(local, remote):
+    # Checks if a merge conflict is due to differences in spacing
+    local_lines = local.splitlines()
+    remote_lines = remote.splitlines()
+
+    for i in range(len(local_lines)):
+        local_line = local_lines[i]
+        remote_line = remote_lines[i]
+
+        local_spacing = len(local_line) - len(local_line.lstrip())
+        remote_spacing = len(remote_line) - len(remote_line.lstrip())
+
+        if local_spacing != remote_spacing:
+            return True
+
+    return False
+
 
 def handleImportConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     localAndRemote = local + remote
@@ -152,6 +229,81 @@ def handleFunctionDefinitionNameConflict(local, remote, input, conflictStart, co
         # rename function definition
         input[conflictStart -
               1:conflictEnd] = lst
+
+
+def handleFunctionSignatureConflict(local, remote, input, conflictStart, conflictEnd):
+    # Extract function signatures from local and remote parts
+    localSignature = re.search("(?<=def )\w+\([^\)]*\)", local)
+    remoteSignature = re.search("(?<=def )\w+\([^\)]*\)", remote)
+
+    # Extract parameter lists from local and remote function signatures
+    localParams = re.search("\((.*?)\)", localSignature.group()).group(1)
+    remoteParams = re.search("\((.*?)\)", remoteSignature.group()).group(1)
+
+    # Get the new parameter added in the remote function signature
+    newParam = remoteParams[len(localParams):].split(",")[0].strip()
+
+    # Replace the local function signature with the remote one
+    newSignature = remoteSignature.group()
+
+    # Replace the local function call with the new signature
+    newLocalPart = re.sub(localSignature.group(), newSignature, local)
+
+    # Add the new parameter to the function call in the remote part
+    newRemotePart = re.sub(localSignature.group(), newSignature, remote)
+    newRemotePart = newRemotePart.replace("(", f"({newParam}, ")
+
+    # Merge the local and remote parts
+    mergedPart = newLocalPart + newRemotePart[len(remote):]
+
+    input[conflictStart-1:conflictEnd] = mergedPart
+
+
+def handleFormattingConflict(local, remote, input, conflictStart, conflictEnd):
+    # Split the function signature lines into function name and parameter lists
+    localParts = local.strip().split("(")
+    remoteParts = remote.strip().split("(")
+
+    # Combine the function name with the union of parameter lists
+    parameters = set(localParts[1].split(",") + remoteParts[1].split(","))
+    combinedPart = localParts[0] + "(" + ",".join(sorted(parameters)) + ")"
+
+    input[conflictStart-1:conflictEnd] = combinedPart
+
+
+def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd):
+    # Remove leading/trailing whitespace and split lines
+    localLines = [line.strip() for line in local.split("\n")]
+    remoteLines = [line.strip() for line in remote.split("\n")]
+
+    # Use the remote version of any lines with whitespace differences
+    mergedLines = [remoteLines[i] if line != remoteLines[i] else line for i, line in enumerate(localLines)]
+
+    # Join the merged lines back together and return the result
+    input[conflictStart-1:conflictEnd] = "\n".join(mergedLines)
+
+
+def handleSpacingConflict(local, remote, input, conflictStart, conflictEnd):
+    # Split the content into lines
+    localLines = local.splitlines()
+    remoteLines = remote.splitlines()
+
+    # Create a list to hold the resolved lines
+    resolvedLines = []
+
+    # Iterate over the lines and use the code with less spaces as the standard for spacing
+    for localLine, remoteLine in zip(localLines, remoteLines):
+        # Get the number of spaces for each line
+        localSpaces = len(localLine) - len(localLine.lstrip())
+        remoteSpaces = len(remoteLine) - len(remoteLine.lstrip())
+
+        # Use the code with less spaces as the standard for spacing
+        if localSpaces <= remoteSpaces:
+            resolvedLines.append(localLine)
+        else:
+            resolvedLines.append(remoteLine)
+
+    input[conflictStart-1:conflictEnd] = "\n".join(resolvedLines)
 
 
 def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
