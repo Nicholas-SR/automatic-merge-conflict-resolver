@@ -82,9 +82,15 @@ def processConflicts(conflicts, input):
         remoteDiff = conflict["remoteDiff"]
         localRemoteCommon = conflict["localRemoteCommon"]
 
-        if isImportConflict(localDiff, remoteDiff):
+        if isImportAsConflict(localDiff, remoteDiff):
+            handleImportAsConflict(local, remote, input, conflictStart,
+                                 conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| Import As Conflict |---")
+
+        elif isImportConflict(localDiff, remoteDiff):
             handleImportConflict(local, remote, input, conflictStart,
                                  conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| Import Conflict |---")
 
         elif isFunctionDefinitionNameConflict(localDiff, remoteDiff):
             print("isFunctionDefinitionNameConflict")
@@ -102,6 +108,15 @@ def processConflicts(conflicts, input):
         elif isSpacingConflict(localDiff, remoteDiff):
             print("isSpacingConflict")
             handleSpacingConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd)
+        elif isCommentConflict(localDiff, remoteDiff):
+            handleCommentConflict(local, remote, input, conflictStart,
+                                 conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| Comment Conflict |---")
+        elif isListAppendConflict(localDiff, remoteDiff):
+            handleListAppendConflict (local, remote, input, conflictStart,
+                                 conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| List Append Conflict |---")
+
         else:
             print("isElseConflict")
             handleElseConflict(
@@ -109,13 +124,54 @@ def processConflicts(conflicts, input):
 
     return input
 
+def isListAppendConflict(localDiff, remoteDiff):
+    # global variables for handler functions
+    global localstatus, remotestatus
+    
+    # Edge case only for single line conflicts
+    if len(remoteDiff) == 1 and len(localDiff) == 1:
+
+        # Traverse line to find 'append' and '+='
+        spacelesslocal, spaceslessremote = localDiff[0].replace(" ", ""), remoteDiff[0].replace(" ", "")
+        i = 0
+        while i < len(spacelesslocal):
+            if spacelesslocal[i] == spaceslessremote[i]:
+                i += 1
+                continue
+            elif spacelesslocal[i] == '.' and spaceslessremote[i] == '+':
+                if spacelesslocal[i:i+7] == '.append' and spaceslessremote[i:i+2] == '+=':
+                    localstatus = 'keep'
+                    remotestatus = 'discard'
+                    return True
+            elif spacelesslocal[i] == '+' and spaceslessremote[i] == '.':
+                if spacelesslocal[i:i+2] == '+='  and spaceslessremote[i:i+7] == '.append':
+                    remotestatus = 'keep'
+                    localstatus = 'discard'
+                    return True
+            return False
+
+    else:
+        return False
+
+def isImportAsConflict(localDiff, remoteDiff):
+    try:
+        isImport = (all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.ImportNode), localDiff)) and all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.ImportNode), remoteDiff)))
+        isAs = (all(map(lambda l: l.split()[2] == 'as', localDiff)) and all(map(lambda l: l.split()[2] == 'as', remoteDiff)))
+        return isImport and isAs
+    except:
+        return False
 
 def isImportConflict(localDiff, remoteDiff):
     try:
         return (all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.ImportNode), localDiff)) and all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.ImportNode), remoteDiff)))
     except:
         return False
-
+    
+def isCommentConflict(localDiff, remoteDiff):
+    try:
+        return (all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.CommentNode), localDiff)) and all(map(lambda l: isinstance(redbaron.RedBaron(l.strip())[0], redbaron.nodes.CommentNode), remoteDiff)))
+    except:
+        return False
 
 def isFunctionDefinitionNameConflict(local, remote):
     try:
@@ -204,6 +260,24 @@ def isSpacingConflict(local, remote):
 
     return False
 
+def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+    localAndRemote = local + remote
+    lstAppendList = []
+    if localstatus == "keep":
+        lstAppendList.append(localDiff[0])
+        for line in localAndRemote:
+            if line not in lstAppendList and line != remoteDiff[0]:
+                lstAppendList.append(line)
+    elif remotestatus == "keep":
+        lstAppendList.append(remoteDiff[0])
+        for line in localAndRemote:
+            if line not in lstAppendList and line != localDiff[0]:
+                lstAppendList.append(line)
+    while len(lstAppendList) < conflictEnd - conflictStart:
+        lstAppendList.append("\n")
+    input[conflictStart-1:conflictEnd] = lstAppendList
+
+        
 
 def handleImportConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     localAndRemote = local + remote
@@ -217,6 +291,47 @@ def handleImportConflict(local, remote, input, conflictStart, conflictEnd, local
     while len(importList) < conflictEnd - conflictStart + 1:
         importList.append("\n")
     input[conflictStart-1:conflictEnd] = importList
+
+def handleImportAsConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+    
+    # Combine lists local and remote with remote first as it takes priority
+    localAndRemote = remote + local
+    importList = []
+    
+    # Remove duplicates from local and remote
+    localImportNames = [x.split()[1] for x in local]
+    remoteImportNames = [x.split()[1] for x in remote]
+    noDupesList = list(set(localImportNames + remoteImportNames))
+
+    # Add all unique packages to the import list
+    for line in localAndRemote:
+        importPack = line.split()[1]
+        if line[:6] == "import" and importPack in noDupesList:
+            importList.append(line)
+            noDupesList.remove(importPack)
+        if line[:6] != "import" and line not in importList and line in localRemoteCommon:
+            importList.append(line)
+            localRemoteCommon.remove(line)
+    while len(importList) < conflictEnd - conflictStart + 1:
+        importList.append("\n")
+    input[conflictStart-1:conflictEnd] = importList
+
+
+def handleCommentConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+    
+    # Handle Duplicate Comments
+    # Same funcitonality as handleImportConflict
+    localAndRemote = local + remote
+    commentList = []
+    for line in localAndRemote:
+        if line[:1] == "#" and line not in commentList:
+            commentList.append(line)
+        if line[:1] != "#" and line not in commentList and line in localRemoteCommon:
+            commentList.append(line)
+            localRemoteCommon.remove(line)
+    while len(commentList) < conflictEnd - conflictStart + 1:
+        commentList.append("\n")
+    input[conflictStart-1:conflictEnd] = commentList
 
 
 def handleFunctionDefinitionNameConflict(local, remote, input, conflictStart, conflictEnd):
