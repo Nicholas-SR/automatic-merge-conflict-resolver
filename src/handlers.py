@@ -106,24 +106,22 @@ def handleFunctionSignatureConflict(local, remote, input, conflictStart, conflic
     # Replace the local function call with the new signature
     newLocalPart = re.sub(localSignature.group(), newSignature, local)
 
-    # Add the new parameter to the function call in the remote part
-    newRemotePart = re.sub(localSignature.group(), newSignature, remote)
-    newRemotePart = newRemotePart.replace("(", f"({newParam}, ")
-
     # Merge the local and remote parts
-    mergedPart = newLocalPart + newRemotePart[len(remote):]
+    mergedPart = newLocalPart
 
-    return mergedPart
+    return mergedPart[0:-3] + mergedPart[-1]
 
 
 def handleFormattingConflict(local, remote, input, conflictStart, conflictEnd):
     # Split the function signature lines into function name and parameter lists
-    localParts = local.strip().split("(")
-    remoteParts = remote.strip().split("(")
+    localParts = local.strip().replace(")", "(").split("(")
+    remoteParts = remote.strip().replace(")", "(").split("(")
 
     # Combine the function name with the union of parameter lists
     parameters = set(localParts[1].split(",") + remoteParts[1].split(","))
-    return localParts[0] + "(" + ",".join(sorted(parameters)) + ")"
+    if localParts[1] == '' or remoteParts[1] == '':
+        parameters.remove('')
+    return localParts[0] + "(" + ",".join(sorted(parameters, reverse=True)) + ")" + ":"
 
 
 def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd):
