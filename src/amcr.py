@@ -13,15 +13,13 @@ localInput = open(flocal).readlines()
 remoteInput = open(fremote).readlines()
 mergeInput = open(fmerge).readlines()
 
-foundConflicts = findConflicts(mergeInput)
+foundConflicts = parser(mergeInput)
 
-processedConflicts = processConflicts(foundConflicts, mergeInput)
+processedConflicts = differ(foundConflicts, mergeInput)
 
-removedNewNewLines = removeNewNewLines(processedConflicts)
+removedNewNewLines = merger(processedConflicts)
 
-joined = ''.join(removedNewNewLines)
-
-writeToMerge(joined, fmerge)
+joined = unparser(removedNewNewLines)
 
 print(joined)
 print("----------------------")

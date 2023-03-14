@@ -4,7 +4,7 @@ from recognizers import *
 conflictRanges = set()
 
 
-def findConflicts(input):
+def parser(input):  # Finds conflicts in the merge file
     conflicts = []
     conflictStart = -1
     conflictEnd = -1
@@ -58,7 +58,7 @@ def findConflicts(input):
     return conflicts
 
 
-def processConflicts(conflicts, input):
+def differ(conflicts, input):  # Processes the conflicts
     for conflict in conflicts:
         conflictStart = conflict["conflictStart"]
         conflictMiddle = conflict["conflictMiddle"]
@@ -114,12 +114,14 @@ def processConflicts(conflicts, input):
     return input
 
 
-def removeNewNewLines(input):
+def merger(input):  # Removes the new new lines
     for count, line in enumerate(input):
         if line == "\n" and count+1 in conflictRanges:
             input[count] = ""
-    return input
+    return ''.join(input)
 
 
-def writeToMerge(input, fmerge):
-    open(fmerge, 'w').write(input)
+def unparser(input, fmerge):  # Converts the tokenized form of the merged code back into non-tokenized string version and writes it to the merge file
+    joined = ''.join(input)
+    open(fmerge, 'w').write(joined)
+    return joined
