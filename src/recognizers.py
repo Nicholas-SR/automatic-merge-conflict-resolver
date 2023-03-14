@@ -1,4 +1,5 @@
 import redbaron
+import re
 
 
 def isListAppendConflict(localDiff, remoteDiff):
