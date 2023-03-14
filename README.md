@@ -17,3 +17,6 @@ An alias is included to speed up development and testing. It aborts the merge, s
 Windows: ```mergeAlias.bat``` or ```bash mergeAlias.sh```
 
 MacOS: ```bash mergeAlias.sh```
+
+# Testing
+To run tests, execute ```pytest``` in the terminal from the home directory
