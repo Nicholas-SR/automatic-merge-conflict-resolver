@@ -49,7 +49,6 @@ def isImportConflict(localDiff, remoteDiff):
         anyImportLocal = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), localDiff)))
         anyImportRemote = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remoteDiff)))
         allImportOrNewLineOrComment = (all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), localDiff)) and all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remoteDiff)))
-        print(anyImportLocal, anyImportRemote, allImportOrNewLineOrComment)
         return anyImportLocal and anyImportRemote and allImportOrNewLineOrComment
     except:
         return False
