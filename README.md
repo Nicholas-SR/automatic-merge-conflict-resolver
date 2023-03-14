@@ -11,6 +11,10 @@ Automatic Merge Conflict Resolver automatically resolves common git merge confli
 After getting a merge conflict, run this command:
 ```git mergetool -t amcr PATH/TO/FILE/WITH/MERGE/CONFLICT.py```
 
+Or leave the file path unspecified to run the mergetool on all files in the directory and subdirectories with merge conflicts:
+```git mergetool -t amcr```
+
+
 # Development
 An alias is included to speed up development and testing. It aborts the merge, starts a new merge, then runs the mergetool.
 
