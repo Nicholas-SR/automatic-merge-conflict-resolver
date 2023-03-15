@@ -58,7 +58,7 @@ def test_handleImportConflict():
     foundConflicts = parser(mergeInput)
 
     conflict0 = foundConflicts[0]
-    expected0 = ['import types\n', 'import filecmp\n', 'import encodings\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n']
+    expected0 = ['import types\n', 'import filecmp\n', 'import encodings\n', '\n', '# test\n', '\n', '\n', '\n', '\n', '\n']
     output0 = handleImportConflict(conflict0["local"], conflict0["remote"], mergeInput, conflict0["conflictStart"], conflict0["conflictEnd"], conflict0["localDiff"], conflict0["remoteDiff"], conflict0["localRemoteCommon"]) 
     print(output0)
     assert output0 == expected0
@@ -73,6 +73,20 @@ def test_handleImportConflict():
 
 
 
+def test_handleCommentConflict():
+    mergeInput = commentConflictTest
+    foundConflicts = parser(mergeInput)
+
+    conflict0 = foundConflicts[0]
+    expected0 = ['# comment 1\n', '# comment 2\n', '\n', '\n', '\n', '\n']
+    output0 = handleCommentConflict(conflict0["local"], conflict0["remote"], mergeInput, conflict0["conflictStart"], conflict0["conflictEnd"], conflict0["localDiff"], conflict0["remoteDiff"], conflict0["localRemoteCommon"]) 
+    assert output0 == expected0
+
+    conflict1 = foundConflicts[1]
+    expected1 = ['# comment 1\n', 'variableA = 1\n', '# comment 3\n', '# comment 2\n', '\n', '\n', '\n', '\n']
+    output1 = handleCommentConflict(conflict1["local"], conflict1["remote"], mergeInput, conflict1["conflictStart"], conflict1["conflictEnd"], conflict1["localDiff"], conflict1["remoteDiff"], conflict1["localRemoteCommon"]) 
+    print(output1)
+    assert output1 == expected1
 
 
 
