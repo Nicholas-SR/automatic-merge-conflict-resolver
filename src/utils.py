@@ -79,37 +79,37 @@ def differ(conflicts, input):  # Processes the conflicts
                                                                       conflictEnd, localDiff, remoteDiff, localRemoteCommon)
             print("---| Import Conflict |---")
 
-        elif isFunctionDefinitionNameConflict(localDiff, remoteDiff):
-            print("isFunctionDefinitionNameConflict")
-            input[conflictStart-1:conflictEnd] = handleFunctionDefinitionNameConflict(
-                local, remote, input, conflictStart, conflictEnd)
-        elif isFunctionSignatureConflict(localDiff, remoteDiff):
-            print("isFunctionSignatureConflict")
-            input[conflictStart-1:conflictEnd] = handleFunctionSignatureConflict()
-        elif isFormattingConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
-            print("isFormattingConflict")
-            input[conflictStart-1:conflictEnd] = handleFormattingConflict()
-        elif isWhitespaceConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
-            print("isWhitespaceConflict")
-            input[conflictStart-1:conflictEnd] = handleWhitespaceConflict(
-                localDiff, remoteDiff, input, conflictStart, conflictEnd)
-        elif isSpacingConflict(localDiff, remoteDiff):
-            print("isSpacingConflict")
-            input[conflictStart-1:conflictEnd] = handleSpacingConflict(localDiff, remoteDiff,
-                                                                       input, conflictStart, conflictEnd)
-        elif isCommentConflict(localDiff, remoteDiff):
-            input[conflictStart-1:conflictEnd] = handleCommentConflict(local, remote, input, conflictStart,
-                                                                       conflictEnd, localDiff, remoteDiff, localRemoteCommon)
-            print("---| Comment Conflict |---")
-        elif isListAppendConflict(localDiff, remoteDiff):
-            input[conflictStart-1:conflictEnd] = handleListAppendConflict(local, remote, input, conflictStart,
-                                                                          conflictEnd, localDiff, remoteDiff, localRemoteCommon)
-            print("---| List Append Conflict |---")
+        # elif isFunctionDefinitionNameConflict(localDiff, remoteDiff):
+        #     print("isFunctionDefinitionNameConflict")
+        #     input[conflictStart-1:conflictEnd] = handleFunctionDefinitionNameConflict(
+        #         local, remote, input, conflictStart, conflictEnd)
+        # elif isFunctionSignatureConflict(localDiff, remoteDiff):
+        #     print("isFunctionSignatureConflict")
+        #     input[conflictStart-1:conflictEnd] = handleFunctionSignatureConflict()
+        # elif isFormattingConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
+        #     print("isFormattingConflict")
+        #     input[conflictStart-1:conflictEnd] = handleFormattingConflict()
+        # elif isWhitespaceConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
+        #     print("isWhitespaceConflict")
+        #     input[conflictStart-1:conflictEnd] = handleWhitespaceConflict(
+        #         localDiff, remoteDiff, input, conflictStart, conflictEnd)
+        # elif isSpacingConflict(localDiff, remoteDiff):
+        #     print("isSpacingConflict")
+        #     input[conflictStart-1:conflictEnd] = handleSpacingConflict(localDiff, remoteDiff,
+        #                                                                input, conflictStart, conflictEnd)
+        # elif isCommentConflict(localDiff, remoteDiff):
+        #     input[conflictStart-1:conflictEnd] = handleCommentConflict(local, remote, input, conflictStart,
+        #                                                                conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+        #     print("---| Comment Conflict |---")
+        # elif isListAppendConflict(localDiff, remoteDiff):
+        #     input[conflictStart-1:conflictEnd] = handleListAppendConflict(local, remote, input, conflictStart,
+        #                                                                   conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+        #     print("---| List Append Conflict |---")
 
-        else:
-            print("isElseConflict")
-            input[conflictStart-1:conflictEnd] = handleElseConflict(
-                local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+        # else:
+        #     print("isElseConflict")
+        #     input[conflictStart-1:conflictEnd] = handleElseConflict(
+        #         local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
 
     return input
 

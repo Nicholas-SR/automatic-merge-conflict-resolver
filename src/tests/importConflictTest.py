@@ -10,13 +10,21 @@ import collections
 import functools
 import filelock
 import math
-<<<<<<< HEAD
 import os
 import sys
-=======
 import base64
+<<<<<<< HEAD
+import types
+import filecmp
+import encodings
+
+=======
+import encodings
+# test
+import filecmp
 >>>>>>> import_conflict
 import calendar
+import types
 
 
 def helloWorld():

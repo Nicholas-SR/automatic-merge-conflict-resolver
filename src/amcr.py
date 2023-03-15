@@ -19,7 +19,7 @@ processedConflicts = differ(foundConflicts, mergeInput)
 
 removedNewNewLines = merger(processedConflicts)
 
-joined = unparser(removedNewNewLines)
+joined = unparser(removedNewNewLines, fmerge)
 
 print(joined)
 print("----------------------")
