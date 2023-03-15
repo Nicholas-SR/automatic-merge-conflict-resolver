@@ -37,7 +37,6 @@ def test_parser_10000_lines():
     foundConflicts = parser(mergeInput)
     processedConflicts = differ(foundConflicts, mergeInput)
     removedNewNewLines = merger(processedConflicts)
-
     # Commented out unparser() as we don't want to write to the file and break future test runs
     # The unparser() function takes a trivial amount of time to run so it doesn't affect the testing
     # unparser(removedNewNewLines, fmerge)
@@ -50,29 +49,25 @@ def test_parser_10000_lines():
 #     foundConflicts = parser(mergeInput)
 #     processedConflicts = differ(foundConflicts, mergeInput)
 #     removedNewNewLines = merger(processedConflicts)
-
     # Commented out unparser() as we don't want to write to the file and break future test runs
     # The unparser() function takes a trivial amount of time to run so it doesn't affect the testing
     # unparser(removedNewNewLines, fmerge)
 
 def test_handleImportConflict():
-    local = ['import types\n', 'import filecmp\n', 'import encodings\n']
-    remote = ['import encodings\n', 'import filecmp\n']
-    input = ['import farmhash\n', 'import libs\n', 'import redbaron\n', '# comment\n', 'import logging\n', 'import getopt\n', 'import stat\n', 'import bz2\n', 'import collections\n', 'import functools\n', 'import filelock\n', 'import math\n', 'import os\n', 'import sys\n', 'import base64\n', '<<<<<<< HEAD\n',
-             'import types\n', 'import filecmp\n', 'import encodings\n', '=======\n', 'import encodings\n', 'import filecmp\n', '>>>>>>> import_conflict\n', 'import calendar\n', 'import types\n', '\n', '\n', 'def helloWorld():\n', '    main = 5 + 6\n', '    print("Hello World!")\n', '    main += 1\n', '\n', 'helloWorld()']
-    conflictStart = 16
-    conflictEnd = 23
-    localDiff = ['import types\n']
-    remoteDiff = []
-    localRemoteCommon = {'import filecmp\n', 'import encodings\n'}
-    expected = ['import types\n', 'import filecmp\n',
-                'import encodings\n', '\n', '\n', '\n', '\n', '\n']
-    assert handleImportConflict(
-        local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon) == expected
+    mergeInput = importConflictTest
+    foundConflicts = parser(mergeInput)
 
+    conflict0 = foundConflicts[0]
+    expected0 = ['import types\n', 'import filecmp\n', 'import encodings\n', '\n', '\n', '\n', '\n', '\n', '\n', '\n']
+    output0 = handleImportConflict(conflict0["local"], conflict0["remote"], mergeInput, conflict0["conflictStart"], conflict0["conflictEnd"], conflict0["localDiff"], conflict0["remoteDiff"], conflict0["localRemoteCommon"]) 
+    print(output0)
+    assert output0 == expected0
 
-
-
+    conflict1 = foundConflicts[1]
+    expected1 = ['import stat\n', 'import bz2\n', 'import collections\n', 'import functools\n', 'import filelock\n', '\n', '\n', '\n', '\n', '\n', '\n']
+    output1 = handleImportConflict(conflict1["local"], conflict1["remote"], mergeInput, conflict1["conflictStart"], conflict1["conflictEnd"], conflict1["localDiff"], conflict1["remoteDiff"], conflict1["localRemoteCommon"]) 
+    print(output1)
+    assert output1 == expected1
 
 
 

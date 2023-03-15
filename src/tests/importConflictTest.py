@@ -3,12 +3,6 @@ import libs
 import redbaron
 # comment
 import logging
-import getopt
-import stat
-import bz2
-import collections
-import functools
-import filelock
 import math
 import os
 import sys
@@ -25,6 +19,18 @@ import filecmp
 >>>>>>> import_conflict
 import calendar
 import types
+import getopt
+<<<<<<< HEAD
+import stat
+import bz2
+import collections
+=======
+import bz2
+import functools
+import filelock
+import stat
+import collections
+>>>>>>> import_conflict
 
 
 def helloWorld():
