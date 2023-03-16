@@ -18,6 +18,7 @@ def isImportConflict(local, remote, localDiff, remoteDiff):
         print("RECOGNIZER ERROR: ", e)
         return False
 
+
 def isCommentConflict(local, remote, localDiff, remoteDiff):
     try:
         anyCommentLocal = (any(map(lambda l: isinstance(
@@ -38,16 +39,35 @@ def isCommentConflict(local, remote, localDiff, remoteDiff):
 def isListAppendConflict(local, remote, localDiff, remoteDiff):
     print("YO")
     try:
-        anyListAppendLocal = (any(map(lambda l: "+= [" in l or ".append" in l, local)))
-        anyListAppendRemote = (any(map(lambda l: "+= [" in l or ".append" in l, remote)))
-        anyListAppendLocalDiffPlus = (any(map(lambda l: "+= [" in l, localDiff)))
-        anyListAppendLocalDiffAppend = (any(map(lambda l: ".append" in l, localDiff)))
-        anyListAppendRemoteDiffPlus = (any(map(lambda l: "+= [" in l, remoteDiff)))
-        anyListAppendRemoteDiffAppend = (any(map(lambda l: ".append" in l, remoteDiff)))
+        anyListAppendLocal = (
+            any(map(lambda l: "+= [" in l or ".append" in l, local)))
+        anyListAppendRemote = (
+            any(map(lambda l: "+= [" in l or ".append" in l, remote)))
+        anyListAppendLocalDiffPlus = (
+            any(map(lambda l: "+= [" in l, localDiff)))
+        anyListAppendLocalDiffAppend = (
+            any(map(lambda l: ".append" in l, localDiff)))
+        anyListAppendRemoteDiffPlus = (
+            any(map(lambda l: "+= [" in l, remoteDiff)))
+        anyListAppendRemoteDiffAppend = (
+            any(map(lambda l: ".append" in l, remoteDiff)))
         return anyListAppendLocal and anyListAppendRemote and ((anyListAppendLocalDiffPlus or anyListAppendRemoteDiffAppend) or (anyListAppendLocalDiffAppend or anyListAppendRemoteDiffPlus))
     except Exception as e:
         print("RECOGNIZER ERROR: ", e)
         return False
+
+
+def isWhitespaceConflict(local, remote, localDiff, remoteDiff):
+    if len(local) != len(remote):
+        return False
+    i = 0
+    while i < len(local):
+        # Strip formatting from local and remote parts
+        if re.sub("[\s\n]+", "", local[i]) != re.sub("[\s\n]+", "", remote[i]):
+            return False
+        i += 1
+    return True
+
 
 # def isFunctionDefinitionNameConflict(local, remote):
 #     try:
@@ -92,29 +112,6 @@ def isListAppendConflict(local, remote, localDiff, remoteDiff):
 #     if remoteParams.startswith(localParams):
 #         new_param = remoteParams[len(localParams):].split(",")[0].strip()
 #         return True
-
-#     return False
-
-
-# def isFormattingConflict(localDiff, remoteDiff):
-
-#     # Strip formatting from local and remote parts
-#     localStripped = re.sub("[\s\n]+", "", localDiff)
-#     remoteStripped = re.sub("[\s\n]+", "", remoteDiff)
-
-#     # Compare stripped local and remote parts
-#     return localStripped == remoteStripped
-
-
-# def isWhitespaceConflict(local, remote):
-#     # Remove leading/trailing whitespace and split lines
-#     localLines = [line.strip() for line in local.split("\n")]
-#     remoteLines = [line.strip() for line in remote.split("\n")]
-
-#     # Check if there are any lines with whitespace differences
-#     for i, line in enumerate(localLines):
-#         if line != remoteLines[i]:
-#             return True
 
 #     return False
 

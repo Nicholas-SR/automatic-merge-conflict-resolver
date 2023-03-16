@@ -1,6 +1,7 @@
 from chatgpt_wrapper import ChatGPT
 from recognizers import *
 import re
+import black
 
 
 def handleImportConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
@@ -25,7 +26,6 @@ def handleCommentConflict(local, remote, input, conflictStart, conflictEnd, loca
     return commentList
 
 
-
 def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     # Prioritizes remote changes over local changes
     localAndRemote = remote + local
@@ -43,6 +43,17 @@ def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, l
     while len(lst) < conflictEnd - conflictStart + 1:
         lst.append("\n")
     return lst
+
+
+def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+    formattedOutputRemote = []
+    for line in remote:
+        stripped_line = line.strip()
+        idx = line.index(stripped_line)
+        formattedOutputRemote.append(
+            line[0:idx] + black.format_str(line, mode=black.Mode()))
+    return formattedOutputRemote
+
 
 # def handleFunctionDefinitionNameConflict(local, remote, input, conflictStart, conflictEnd):
 #     localSplit = re.split(', |\(|\)|\ ', local[0])
@@ -77,31 +88,6 @@ def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, l
 #     mergedPart = newLocalPart
 
 #     return mergedPart[0:-3] + mergedPart[-1]
-
-
-# def handleFormattingConflict(local, remote, input, conflictStart, conflictEnd):
-#     # Split the function signature lines into function name and parameter lists
-#     localParts = local.strip().replace(")", "(").split("(")
-#     remoteParts = remote.strip().replace(")", "(").split("(")
-
-#     # Combine the function name with the union of parameter lists
-#     parameters = set(localParts[1].split(",") + remoteParts[1].split(","))
-#     if localParts[1] == '' or remoteParts[1] == '':
-#         parameters.remove('')
-#     return localParts[0] + "(" + ",".join(sorted(parameters, reverse=True)) + ")" + ":"
-
-
-# def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd):
-#     # Remove leading/trailing whitespace and split lines
-#     localLines = [line.strip() for line in local.split("\n")]
-#     remoteLines = [line.strip() for line in remote.split("\n")]
-
-#     # Use the remote version of any lines with whitespace differences
-#     mergedLines = [remoteLines[i] if line != remoteLines[i]
-#                    else line for i, line in enumerate(localLines)]
-
-#     # Join the merged lines back together and return the result
-#     return "\n".join(mergedLines)
 
 
 # def handleSpacingConflict(local, remote, input, conflictStart, conflictEnd):
