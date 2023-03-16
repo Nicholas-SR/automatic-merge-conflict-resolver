@@ -3,55 +3,11 @@ from recognizers import *
 import re
 
 
-def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
-    localAndRemote = local + remote
-    lstAppendList = []
-    if localstatus == "keep":
-        lstAppendList.append(localDiff[0])
-        for line in localAndRemote:
-            if line not in lstAppendList and line != remoteDiff[0]:
-                lstAppendList.append(line)
-    elif remotestatus == "keep":
-        lstAppendList.append(remoteDiff[0])
-        for line in localAndRemote:
-            if line not in lstAppendList and line != localDiff[0]:
-                lstAppendList.append(line)
-    while len(lstAppendList) < conflictEnd - conflictStart:
-        lstAppendList.append("\n")
-    return lstAppendList
-
-
 def handleImportConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     localAndRemote = local + remote
     importList = []
     for line in localAndRemote:
-        if line[:6] == "import" and line not in importList:
-            importList.append(line)
-        if line[:6] != "import" and line not in importList:
-            importList.append(line)
-    while len(importList) < conflictEnd - conflictStart + 1:
-        importList.append("\n")
-    return importList
-
-
-def handleImportAsConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
-
-    # Combine lists local and remote with remote first as it takes priority
-    localAndRemote = remote + local
-    importList = []
-
-    # Remove duplicates from local and remote
-    localImportNames = [x.split()[1] for x in local]
-    remoteImportNames = [x.split()[1] for x in remote]
-    noDupesList = list(set(localImportNames + remoteImportNames))
-
-    # Add all unique packages to the import list
-    for line in localAndRemote:
-        importPack = line.split()[1]
-        if line[:6] == "import" and importPack in noDupesList:
-            importList.append(line)
-            noDupesList.remove(importPack)
-        if line[:6] != "import" and line not in importList :
+        if line not in importList:
             importList.append(line)
     while len(importList) < conflictEnd - conflictStart + 1:
         importList.append("\n")
@@ -59,15 +15,10 @@ def handleImportAsConflict(local, remote, input, conflictStart, conflictEnd, loc
 
 
 def handleCommentConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
-
-    # Handle Duplicate Comments
-    # Same funcitonality as handleImportConflict
     localAndRemote = local + remote
     commentList = []
     for line in localAndRemote:
-        if line[:1] == "#" and line not in commentList:
-            commentList.append(line)
-        if line[:1] != "#" and line not in commentList:
+        if line not in commentList:
             commentList.append(line)
     while len(commentList) < conflictEnd - conflictStart + 1:
         commentList.append("\n")
@@ -75,6 +26,23 @@ def handleCommentConflict(local, remote, input, conflictStart, conflictEnd, loca
 
 
 
+def handleListAppendConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+    # Prioritizes remote changes over local changes
+    localAndRemote = remote + local
+    lst = []
+    listNames = set()
+    for line in localAndRemote:
+        if (".append" not in line) and ("+= [" not in line) and line not in lst:
+            lst.append(line)
+        elif (".append" in line) and (line[0:line.index(".append")] not in listNames) and line not in lst:
+            lst.append(line)
+            listNames.add(line[0:line.index(".append")])
+        elif ("+= [" in line) and (line[0:line.index("+")-1] not in listNames) and line not in lst:
+            lst.append(line)
+            listNames.add(line[0:line.index("+")-1])
+    while len(lst) < conflictEnd - conflictStart + 1:
+        lst.append("\n")
+    return lst
 
 # def handleFunctionDefinitionNameConflict(local, remote, input, conflictStart, conflictEnd):
 #     localSplit = re.split(', |\(|\)|\ ', local[0])

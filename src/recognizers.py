@@ -4,56 +4,50 @@ import re
 
 def isImportConflict(local, remote, localDiff, remoteDiff):
     try:
-        anyImportLocal = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), local)))
-        anyImportRemote = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remote)))
-        anyImportLocalDiff = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), localDiff)))
-        anyImportRemoteDiff = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remoteDiff)))
+        anyImportLocal = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), local)))
+        anyImportRemote = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remote)))
+        anyImportLocalDiff = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), localDiff)))
+        anyImportRemoteDiff = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remoteDiff)))
         # allImportOrNewLineOrComment = (all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), local)) and all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remote)))
-        return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff) 
-    except:
+        return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
+    except Exception as e:
+        print("RECOGNIZER ERROR: ", e)
         return False
-
 
 def isCommentConflict(local, remote, localDiff, remoteDiff):
     try:
-        anyCommentLocal = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), local)))
-        anyCommentRemote = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remote)))
-        anyCommentLocalDiff = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), localDiff)))
-        anyCommentRemoteDiff = (any(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remoteDiff)))
+        anyCommentLocal = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), local)))
+        anyCommentRemote = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remote)))
+        anyCommentLocalDiff = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), localDiff)))
+        anyCommentRemoteDiff = (any(map(lambda l: isinstance(
+            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remoteDiff)))
         # allCommentOrNewLineOrComment = (all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), local)) and all(map(lambda l: isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.EndlNode) | isinstance(redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remote)))
-        return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff) 
-    except:
+        return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
+    except Exception as e:
+        print("RECOGNIZER ERROR: ", e)
         return False
 
-# def isListAppendConflict(localDiff, remoteDiff):
-#     # global variables for handler functions
-#     global localstatus, remotestatus
 
-#     # Edge case only for single line conflicts
-#     if len(remoteDiff) == 1 and len(localDiff) == 1:
-
-#         # Traverse line to find 'append' and '+='
-#         spacelesslocal, spaceslessremote = localDiff[0].replace(
-#             " ", ""), remoteDiff[0].replace(" ", "")
-#         i = 0
-#         while i < len(spacelesslocal):
-#             if spacelesslocal[i] == spaceslessremote[i]:
-#                 i += 1
-#                 continue
-#             elif spacelesslocal[i] == '.' and spaceslessremote[i] == '+':
-#                 if spacelesslocal[i:i+7] == '.append' and spaceslessremote[i:i+2] == '+=':
-#                     localstatus = 'keep'
-#                     remotestatus = 'discard'
-#                     return True
-#             elif spacelesslocal[i] == '+' and spaceslessremote[i] == '.':
-#                 if spacelesslocal[i:i+2] == '+=' and spaceslessremote[i:i+7] == '.append':
-#                     remotestatus = 'keep'
-#                     localstatus = 'discard'
-#                     return True
-#             return False
-
-#     else:
-#         return False
+def isListAppendConflict(local, remote, localDiff, remoteDiff):
+    print("YO")
+    try:
+        anyListAppendLocal = (any(map(lambda l: "+= [" in l or ".append" in l, local)))
+        anyListAppendRemote = (any(map(lambda l: "+= [" in l or ".append" in l, remote)))
+        anyListAppendLocalDiffPlus = (any(map(lambda l: "+= [" in l, localDiff)))
+        anyListAppendLocalDiffAppend = (any(map(lambda l: ".append" in l, localDiff)))
+        anyListAppendRemoteDiffPlus = (any(map(lambda l: "+= [" in l, remoteDiff)))
+        anyListAppendRemoteDiffAppend = (any(map(lambda l: ".append" in l, remoteDiff)))
+        return anyListAppendLocal and anyListAppendRemote and ((anyListAppendLocalDiffPlus or anyListAppendRemoteDiffAppend) or (anyListAppendLocalDiffAppend or anyListAppendRemoteDiffPlus))
+    except Exception as e:
+        print("RECOGNIZER ERROR: ", e)
+        return False
 
 # def isFunctionDefinitionNameConflict(local, remote):
 #     try:

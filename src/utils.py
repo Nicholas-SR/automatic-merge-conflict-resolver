@@ -75,9 +75,15 @@ def differ(conflicts, input):  # Processes the conflicts
             print("---| Import Conflict |---")
 
         elif isCommentConflict(local, remote, localDiff, remoteDiff):
-                input[conflictStart-1:conflictEnd] = handleCommentConflict(local, remote, input, conflictStart,
-                                                                        conflictEnd, localDiff, remoteDiff, localRemoteCommon)
-                print("---| Comment Conflict |---")
+            input[conflictStart-1:conflictEnd] = handleCommentConflict(local, remote, input, conflictStart,
+                                                                       conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| Comment Conflict |---")
+
+        elif isListAppendConflict(local, remote, localDiff, remoteDiff):
+            input[conflictStart-1:conflictEnd] = handleListAppendConflict(local, remote, input, conflictStart,
+                                                                       conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            print("---| List Append Conflict |---")
+
         # elif isFunctionDefinitionNameConflict(localDiff, remoteDiff):
         #     print("isFunctionDefinitionNameConflict")
         #     input[conflictStart-1:conflictEnd] = handleFunctionDefinitionNameConflict(
@@ -96,11 +102,6 @@ def differ(conflicts, input):  # Processes the conflicts
         #     print("isSpacingConflict")
         #     input[conflictStart-1:conflictEnd] = handleSpacingConflict(localDiff, remoteDiff,
         #                                                                input, conflictStart, conflictEnd)
-  
-        # elif isListAppendConflict(localDiff, remoteDiff):
-        #     input[conflictStart-1:conflictEnd] = handleListAppendConflict(local, remote, input, conflictStart,
-        #                                                                   conflictEnd, localDiff, remoteDiff, localRemoteCommon)
-        #     print("---| List Append Conflict |---")
 
         # else:
         #     print("isElseConflict")
