@@ -116,19 +116,4 @@ def isWhitespaceConflict(local, remote, localDiff, remoteDiff):
 #     return False
 
 
-# def isSpacingConflict(local, remote):
-#     # Checks if a merge conflict is due to differences in spacing
-#     local_lines = local.splitlines()
-#     remote_lines = remote.splitlines()
 
-#     for i in range(len(local_lines)):
-#         local_line = local_lines[i]
-#         remote_line = remote_lines[i]
-
-#         local_spacing = len(local_line) - len(local_line.lstrip())
-#         remote_spacing = len(remote_line) - len(remote_line.lstrip())
-
-#         if local_spacing != remote_spacing:
-#             return True
-
-#     return False

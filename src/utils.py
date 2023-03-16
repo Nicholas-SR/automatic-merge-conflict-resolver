@@ -97,15 +97,8 @@ def differ(conflicts, input):  # Processes the conflicts
         #     print("isFunctionSignatureConflict")
         #     input[conflictStart-1:conflictEnd] = handleFunctionSignatureConflict()
         #     input[conflictStart-1:conflictEnd] = handleFormattingConflict()
-        # elif isWhitespaceConflict(localDiff, remoteDiff, input, conflictStart, conflictEnd):
-        #     print("isWhitespaceConflict")
-        #     input[conflictStart-1:conflictEnd] = handleWhitespaceConflict(
-        #         localDiff, remoteDiff, input, conflictStart, conflictEnd)
-        # elif isSpacingConflict(localDiff, remoteDiff):
-        #     print("isSpacingConflict")
-        #     input[conflictStart-1:conflictEnd] = handleSpacingConflict(localDiff, remoteDiff,
-        #                                                                input, conflictStart, conflictEnd)
-
+     
+   
         # else:
         #     print("isElseConflict")
         #     input[conflictStart-1:conflictEnd] = handleElseConflict(

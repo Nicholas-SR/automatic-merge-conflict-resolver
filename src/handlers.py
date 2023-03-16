@@ -90,29 +90,6 @@ def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, l
 #     return mergedPart[0:-3] + mergedPart[-1]
 
 
-# def handleSpacingConflict(local, remote, input, conflictStart, conflictEnd):
-#     # Split the content into lines
-#     localLines = local.splitlines()
-#     remoteLines = remote.splitlines()
-
-#     # Create a list to hold the resolved lines
-#     resolvedLines = []
-
-#     # Iterate over the lines and use the code with less spaces as the standard for spacing
-#     for localLine, remoteLine in zip(localLines, remoteLines):
-#         # Get the number of spaces for each line
-#         localSpaces = len(localLine) - len(localLine.lstrip())
-#         remoteSpaces = len(remoteLine) - len(remoteLine.lstrip())
-
-#         # Use the code with less spaces as the standard for spacing
-#         if localSpaces <= remoteSpaces:
-#             resolvedLines.append(localLine)
-#         else:
-#             resolvedLines.append(remoteLine)
-
-#     return "\n".join(resolvedLines)
-
-
 def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     prompt = "resolve the merge conflict in this code and output only the code in a code block:\n" + \
         ''.join(input)
