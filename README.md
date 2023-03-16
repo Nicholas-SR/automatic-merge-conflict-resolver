@@ -5,7 +5,7 @@ Automatic Merge Conflict Resolver automatically resolves common git merge confli
 1. Run the following command in the root directory:
 ```git config --local include.path ../.gitconfig```
 
-2. Install and configure the [chatgpt-wrapper](https://github.com/mmabrouk/chatgpt-wrapper) package
+2. Install and configure the [chatgpt-wrapper](https://github.com/mmabrouk/chatgpt-wrapper) package and the packages in requirements.txt
 
 # Execution
 After getting a merge conflict, run this command:
