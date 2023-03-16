@@ -55,41 +55,6 @@ def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, l
     return formattedOutputRemote
 
 
-# def handleFunctionDefinitionNameConflict(local, remote, input, conflictStart, conflictEnd):
-#     localSplit = re.split(', |\(|\)|\ ', local[0])
-#     remoteSplit = re.split(', |\(|\)|\ ', remote[0])
-#     if localSplit[1] != remoteSplit[1] and localSplit[2:] == remoteSplit[2:]:
-#         lst = [local[0].replace(localSplit[1], remoteSplit[1])]
-#         while len(lst) < conflictEnd - conflictStart + 1:
-#             lst.append("\n")
-#         # rename function definition
-#         return lst
-
-
-# def handleFunctionSignatureConflict(local, remote, input, conflictStart, conflictEnd):
-#     # Extract function signatures from local and remote parts
-#     localSignature = re.search("(?<=def )\w+\([^\)]*\)", local)
-#     remoteSignature = re.search("(?<=def )\w+\([^\)]*\)", remote)
-
-#     # Extract parameter lists from local and remote function signatures
-#     localParams = re.search("\((.*?)\)", localSignature.group()).group(1)
-#     remoteParams = re.search("\((.*?)\)", remoteSignature.group()).group(1)
-
-#     # Get the new parameter added in the remote function signature
-#     newParam = remoteParams[len(localParams):].split(",")[0].strip()
-
-#     # Replace the local function signature with the remote one
-#     newSignature = remoteSignature.group()
-
-#     # Replace the local function call with the new signature
-#     newLocalPart = re.sub(localSignature.group(), newSignature, local)
-
-#     # Merge the local and remote parts
-#     mergedPart = newLocalPart
-
-#     return mergedPart[0:-3] + mergedPart[-1]
-
-
 def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     prompt = "resolve the merge conflict in this code and output only the code in a code block:\n" + \
         ''.join(input)

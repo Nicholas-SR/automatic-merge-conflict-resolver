@@ -89,20 +89,10 @@ def differ(conflicts, input):  # Processes the conflicts
                                                                           conflictEnd, localDiff, remoteDiff, localRemoteCommon)
             print("---| Whitespace Conflict |---")
 
-        # elif isFunctionDefinitionNameConflict(localDiff, remoteDiff):
-        #     print("isFunctionDefinitionNameConflict")
-        #     input[conflictStart-1:conflictEnd] = handleFunctionDefinitionNameConflict(
-        #         local, remote, input, conflictStart, conflictEnd)
-        # elif isFunctionSignatureConflict(localDiff, remoteDiff):
-        #     print("isFunctionSignatureConflict")
-        #     input[conflictStart-1:conflictEnd] = handleFunctionSignatureConflict()
-        #     input[conflictStart-1:conflictEnd] = handleFormattingConflict()
-     
-   
-        # else:
-        #     print("isElseConflict")
-        #     input[conflictStart-1:conflictEnd] = handleElseConflict(
-        #         local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+        else:
+            print("isElseConflict")
+            input[conflictStart-1:conflictEnd] = handleElseConflict(
+                local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
 
     return input
 
