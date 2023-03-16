@@ -8,7 +8,7 @@ import os
 import sys
 import base64
 <<<<<<< HEAD
-import types
+import types as f
 import filecmp
 import encodings
 
