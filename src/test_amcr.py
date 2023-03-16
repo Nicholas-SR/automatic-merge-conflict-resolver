@@ -171,10 +171,23 @@ def test_listAppendConflictEndToEnd():
     assert processedConflicts == expected
 
 
-# def test_isImportConflict():
-#     localDiff = ["import A"]
-#     remoteDiff = ["import B"]
-#     assert isImportConflict(localDiff, remoteDiff) == True
+def test_isImportConflict_fail():
+    local = ["import A"]
+    remote = ["var = B"]
+    localDiff = ["import A"]
+    remoteDiff = ["var = B"]
+    assert False == isImportConflict(local, remote, localDiff, remoteDiff)
+    assert False == isImportConflict(remote, local, remoteDiff, localDiff)
+
+
+def test_isCommentConflict_fail():
+    local = ["# comment"]
+    remote = ["var = B"]
+    localDiff = ["# comment"]
+    remoteDiff = ["var = B"]
+    assert False == isCommentConflict(local, remote, localDiff, remoteDiff)
+    assert False == isCommentConflict(remote, local, remoteDiff, localDiff)
+
 
 
 # def test_isImportConflict_fail():
