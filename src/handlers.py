@@ -1,7 +1,8 @@
 from chatgpt_wrapper import ChatGPT
 from recognizers import *
-import re
 import black
+import openai
+import os
 
 
 def handleImportConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
@@ -58,7 +59,23 @@ def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, l
 def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
     prompt = "resolve the merge conflict in this code and output only the code in a code block:\n" + \
         ''.join(input)
-    bot = ChatGPT()
-    response = bot.ask(prompt)
-    if response:
-        return response.splitlines(keepends=True)[1:-1]
+    API_KEY = os.getenv("OPENAI_API_KEY")
+    if API_KEY == None:
+        bot = ChatGPT()
+        response = bot.ask(prompt)
+        if response:
+            return response.splitlines(keepends=True)[1:-1]
+        else:
+            raise Exception("Unofficial ChatGPT Wrapper is not setup correctly or it has been deprecated.")
+    else:
+        openai.api_key = API_KEY
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        if response:
+            return response.choices[0].message.content.splitlines(keepends=True)[1:-1]
+        else:
+            raise Exception("Invalid OpenAI API Key")
