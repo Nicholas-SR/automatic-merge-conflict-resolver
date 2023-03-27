@@ -3,43 +3,59 @@ import re
 
 
 def isImportConflict(local, remote, localDiff, remoteDiff):
-    try:
-        anyImportLocal = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), local)))
-        anyImportRemote = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), remote)))
-        anyImportLocalDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), localDiff)))
-        anyImportRemoteDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), remoteDiff)))
-        if localDiff == [] and remoteDiff == []:
-            return anyImportLocal and anyImportRemote
-        return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
-    except Exception as e:
-        print("RECOGNIZER ERROR IN isImportConflict: ", e)
-        return False
+    anyImportLocal = False
+    anyImportRemote = False
+    anyImportLocalDiff = False
+    anyImportRemoteDiff = False
+    for line in local:
+        if line.strip()[:7] == "import":
+            anyImportLocal = True
+            break
+    for line in remote:
+        if line.strip()[:7] == "import":
+            anyImportRemote = True
+            break
+    for line in localDiff:
+        if line.strip()[:7] == "import":
+            anyImportLocalDiff = True
+            break
+    for line in remoteDiff:
+        if line.strip()[:7] == "import":
+            anyImportRemoteDiff = True
+            break
+    if localDiff == [] and remoteDiff == []:
+        return anyImportLocal and anyImportRemote
+    return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
+
 
 
 def isCommentConflict(local, remote, localDiff, remoteDiff):
-    try:
-        anyCommentLocal = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), local)))
-        anyCommentRemote = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), remote)))
-        anyCommentLocalDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), localDiff)))
-        anyCommentRemoteDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), remoteDiff)))
-        if localDiff == [] and remoteDiff == []:
-            return anyCommentLocal and anyCommentRemote
-        return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
-    except Exception as e:
-        print("RECOGNIZER ERROR IN isCommentConflict: ", e)
-        return False
+    anyCommentLocal = False 
+    anyCommentRemote = False
+    anyCommentLocalDiff = False
+    anyCommentRemoteDiff = False
+    for line in local:
+        if line.strip()[0] == "#":
+            anyCommentLocal = True
+            break
+    for line in remote:
+        if line.strip()[0] == "#":
+            anyCommentRemote = True
+            break
+    for line in localDiff:
+        if line.strip()[0] == "#":
+            anyCommentLocalDiff = True
+            break
+    for line in remoteDiff:
+        if line.strip()[0] == "#":
+            anyCommentRemoteDiff = True
+            break
+    if localDiff == [] and remoteDiff == []:
+        return anyCommentLocal and anyCommentRemote
+    return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
 
 
 def isListAppendConflict(local, remote, localDiff, remoteDiff):
-    print("YO")
     try:
         anyListAppendLocal = (
             any(map(lambda l: "+= [" in l or ".append" in l, local)))
@@ -55,7 +71,7 @@ def isListAppendConflict(local, remote, localDiff, remoteDiff):
             any(map(lambda l: ".append" in l, remoteDiff)))
         return anyListAppendLocal and anyListAppendRemote and ((anyListAppendLocalDiffPlus or anyListAppendRemoteDiffAppend) or (anyListAppendLocalDiffAppend or anyListAppendRemoteDiffPlus))
     except Exception as e:
-        print("RECOGNIZER ERROR: ", e)
+        print("RECOGNIZER ERROR: ", e, local, remote, localDiff, remoteDiff)
         return False
 
 
