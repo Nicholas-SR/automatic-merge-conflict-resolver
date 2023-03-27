@@ -10,12 +10,6 @@ import collections
 import functools
 import filelock
 import math
-<<<<<<< HEAD
-import os
-import sys
-=======
-import base64
->>>>>>> import_conflict
 import calendar
 
 
