@@ -12,9 +12,11 @@ def isImportConflict(local, remote, localDiff, remoteDiff):
             redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), localDiff)))
         anyImportRemoteDiff = (any(map(lambda l: isinstance(
             redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remoteDiff)))
+        if localDiff == [] and remoteDiff == []:
+            return anyImportLocal and anyImportRemote
         return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
     except Exception as e:
-        print("RECOGNIZER ERROR: ", e)
+        print("RECOGNIZER ERROR IN isImportConflict: ", e)
         return False
 
 
@@ -28,9 +30,11 @@ def isCommentConflict(local, remote, localDiff, remoteDiff):
             redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), localDiff)))
         anyCommentRemoteDiff = (any(map(lambda l: isinstance(
             redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remoteDiff)))
+        if localDiff == [] and remoteDiff == []:
+            return anyCommentLocal and anyCommentRemote
         return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
     except Exception as e:
-        print("RECOGNIZER ERROR: ", e)
+        print("RECOGNIZER ERROR IN isCommentConflict: ", e)
         return False
 
 
