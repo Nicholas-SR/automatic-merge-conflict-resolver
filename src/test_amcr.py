@@ -96,10 +96,8 @@ def test_isWhitespaceConflictTest():
     foundConflicts = parser(mergeInput)
     conflict0 = foundConflicts[0]
     conflict1 = foundConflicts[1]
-    assert True == isWhitespaceConflict(conflict0["local"], conflict0["remote"],
-                                        conflict0["localDiff"], conflict0["remoteDiff"])
-    assert True == isWhitespaceConflict(conflict1["local"], conflict1["remote"],
-                                        conflict0["localDiff"], conflict0["remoteDiff"])
+    assert True == isWhitespaceConflict(conflict0["local"], conflict0["remote"])
+    assert True == isWhitespaceConflict(conflict1["local"], conflict1["remote"])
 
 
 def test_handleImportConflict():

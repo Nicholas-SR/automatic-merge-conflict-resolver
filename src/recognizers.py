@@ -55,7 +55,7 @@ def isListAppendConflict(local, remote, localDiff, remoteDiff):
         return False
 
 
-def isWhitespaceConflict(local, remote, localDiff, remoteDiff):
+def isWhitespaceConflict(local, remote):
     if len(local) != len(remote):
         return False
     i = 0
