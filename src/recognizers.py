@@ -5,13 +5,13 @@ import re
 def isImportConflict(local, remote, localDiff, remoteDiff):
     try:
         anyImportLocal = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), local)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), local)))
         anyImportRemote = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remote)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), remote)))
         anyImportLocalDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), localDiff)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), localDiff)))
         anyImportRemoteDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.ImportNode), remoteDiff)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.ImportNode), remoteDiff)))
         if localDiff == [] and remoteDiff == []:
             return anyImportLocal and anyImportRemote
         return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
@@ -23,13 +23,13 @@ def isImportConflict(local, remote, localDiff, remoteDiff):
 def isCommentConflict(local, remote, localDiff, remoteDiff):
     try:
         anyCommentLocal = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), local)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), local)))
         anyCommentRemote = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remote)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), remote)))
         anyCommentLocalDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), localDiff)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), localDiff)))
         anyCommentRemoteDiff = (any(map(lambda l: isinstance(
-            redbaron.RedBaron(l)[0], redbaron.nodes.CommentNode), remoteDiff)))
+            redbaron.RedBaron(l.strip)[0], redbaron.nodes.CommentNode), remoteDiff)))
         if localDiff == [] and remoteDiff == []:
             return anyCommentLocal and anyCommentRemote
         return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
