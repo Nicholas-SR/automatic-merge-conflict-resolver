@@ -90,7 +90,7 @@ def differ(conflicts, input):  # Processes the conflicts
             print("---| Whitespace Conflict |---")
 
         else:
-            print("isElseConflict")
+            print("---| Is Unhandled \"Else\" Conflict |---")
             input[conflictStart-1:conflictEnd] = handleElseConflict(
                 local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
 
