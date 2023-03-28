@@ -57,7 +57,7 @@ def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, l
 
 
 def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
-    prompt = "resolve the merge conflict in this code and output only the code in a code block:\n" + \
+    prompt = "resolve the merge conflict in this code and output only the code in a code block. resolve the merge conflict in this code and output only the code in a code block. do not modify the formatting or spacing of the code, do not add or remove new line characters:\n" + \
         ''.join(input)
     API_KEY = os.getenv("OPENAI_API_KEY")
     if API_KEY == None:
