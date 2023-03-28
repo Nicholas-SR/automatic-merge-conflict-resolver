@@ -8,19 +8,19 @@ def isImportConflict(local, remote, localDiff, remoteDiff):
     anyImportLocalDiff = False
     anyImportRemoteDiff = False
     for line in local:
-        if line.strip()[:7] == "import":
+        if line.strip()[:6] == "import":
             anyImportLocal = True
             break
     for line in remote:
-        if line.strip()[:7] == "import":
+        if line.strip()[:6] == "import":
             anyImportRemote = True
             break
     for line in localDiff:
-        if line.strip()[:7] == "import":
+        if line.strip()[:6] == "import":
             anyImportLocalDiff = True
             break
     for line in remoteDiff:
-        if line.strip()[:7] == "import":
+        if line.strip()[:6] == "import":
             anyImportRemoteDiff = True
             break
     if localDiff == [] and remoteDiff == []:
