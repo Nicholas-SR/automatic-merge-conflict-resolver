@@ -14,11 +14,13 @@ def helloWorld():
     print("Hello World!")
     main += 1
     list.append(1)
+    list += [2]
 
 helloWorld()
 
 list2 = []
 def helloWorld2():
+    # b
     main = 5 + 6
     print("Hello World!")
     main += 1
