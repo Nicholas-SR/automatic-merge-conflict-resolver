@@ -91,8 +91,7 @@ def differ(conflicts, input):  # Processes the conflicts
 
         else:
             print("---| Is Unhandled \"Else\" Conflict |---")
-            input = handleElseConflict(
-                local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon)
+            input = handleElseConflict(input)
 
     return input
 

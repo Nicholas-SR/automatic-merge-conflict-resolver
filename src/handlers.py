@@ -56,15 +56,15 @@ def handleWhitespaceConflict(local, remote, input, conflictStart, conflictEnd, l
     return formattedOutputRemote
 
 
-def handleElseConflict(local, remote, input, conflictStart, conflictEnd, localDiff, remoteDiff, localRemoteCommon):
+def handleElseConflict(input):
     prompt = "resolve the merge conflict in this code and output only the code in a code block. resolve the merge conflict in this code and output only the code in a code block. do not modify the formatting or spacing of the code, do not add or remove new line characters:\n" + \
         ''.join(input)
     API_KEY = os.getenv("OPENAI_API_KEY")
-    if API_KEY == None:
+    if API_KEY == None or API_KEY == "":
         bot = ChatGPT()
         response = bot.ask(prompt)
         if response:
-            return response.splitlines(keepends=True)[1:-1]
+            return response[1].splitlines(keepends=True)[1:-1]
         else:
             raise Exception("Unofficial ChatGPT Wrapper is not setup correctly or it has been deprecated.")
     else:

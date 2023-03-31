@@ -31,8 +31,6 @@ with open(file_path_listAppendConflict, 'r') as f:
     listAppendConflict = f.readlines()
 with open(file_path_whitespaceConflictTest, 'r') as f:
     whitespaceConflict = f.readlines()
-# run formatter on code before passing it to the parser to avoid issues with misplaced newlines
-
 
 # Fails if test takes longer than 1 second
 @pytest.mark.timeout(1)
@@ -108,14 +106,12 @@ def test_handleImportConflict():
                  'import encodings\n', '\n', '# test\n', '\n', '\n', '\n', '\n', '\n']
     output0 = handleImportConflict(conflict0["local"], conflict0["remote"], mergeInput, conflict0["conflictStart"],
                                    conflict0["conflictEnd"], conflict0["localDiff"], conflict0["remoteDiff"], conflict0["localRemoteCommon"])
-    print(output0)
     assert output0 == expected0
     conflict1 = foundConflicts[1]
     expected1 = ['import stat\n', 'import bz2\n', 'import collections\n',
                  'import functools\n', 'import filelock\n', '\n', '\n', '\n', '\n', '\n', '\n']
     output1 = handleImportConflict(conflict1["local"], conflict1["remote"], mergeInput, conflict1["conflictStart"],
                                    conflict1["conflictEnd"], conflict1["localDiff"], conflict1["remoteDiff"], conflict1["localRemoteCommon"])
-    print(output1)
     assert output1 == expected1
 
 
@@ -132,7 +128,6 @@ def test_handleCommentConflict():
                  '# comment 3\n', '# comment 2\n', '\n', '\n', '\n', '\n']
     output1 = handleCommentConflict(conflict1["local"], conflict1["remote"], mergeInput, conflict1["conflictStart"],
                                     conflict1["conflictEnd"], conflict1["localDiff"], conflict1["remoteDiff"], conflict1["localRemoteCommon"])
-    print(output1)
     assert output1 == expected1
 
 
