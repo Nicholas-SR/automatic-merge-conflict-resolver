@@ -46,11 +46,11 @@ def test_parser_10000_lines():
 # UNCOMMENT FOR FINAL SUBMISSION, commented for performance reasons for now.
 
 # Testing if AMCR crashes when given a file with 100,000 lines
-# def test_parser_100000_lines():
-#     mergeInput = lines100000conflictTest
-#     foundConflicts = parser(mergeInput)
-#     processedConflicts = differ(foundConflicts, mergeInput)
-#     removedNewNewLines = merger(processedConflicts)
+def test_parser_100000_lines():
+    mergeInput = lines100000conflictTest
+    foundConflicts = parser(mergeInput)
+    processedConflicts = differ(foundConflicts, mergeInput)
+    removedNewNewLines = merger(processedConflicts)
     # Commented out unparser() as we don't want to write to the file and break future test runs
     # The unparser() function takes a trivial amount of time to run so it doesn't affect the testing
     # unparser(removedNewNewLines, fmerge)
