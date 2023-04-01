@@ -1,9 +1,11 @@
 from handlers import *
 from recognizers import *
 from utils import *
+import pytest
 import os
 
 # You must provide a valid OpenAI API key in the env variables in order to run this test
+# If an API key is not provided, the test will be skipped and thus pass
 
 current_dir = os.path.dirname(__file__)
 
@@ -21,6 +23,8 @@ def test_handleElseConflictOpenAiAPI():
     foundConflicts = parser(mergeInput)
     processedConflicts = differ(foundConflicts, mergeInput)
     API_KEY = os.getenv("OPENAI_API_KEY")
+    if API_KEY == None or API_KEY == "":
+        pytest.skip("No OpenAI API key provided")
     assert API_KEY != None and API_KEY != ""
     assert "    main = 5 + 6\n" in processedConflicts or "    main = 5+6\n" in processedConflicts
     assert "list = []\n" in processedConflicts
