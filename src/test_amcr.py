@@ -242,8 +242,6 @@ def test_handleElseConflictChatGPTWrapper():
     assert "list = []\n" in processedConflicts
     assert "    main += 1\n" in processedConflicts or "    main = main + 1\n" in processedConflicts
     assert "    list.append(1)\n" in processedConflicts or "    list += [1]\n" in processedConflicts
-  
-test_handleElseConflictChatGPTWrapper()
 
 # You must provide a valid OpenAI API key in the env variables in order to run this test
 # If an API key is not provided, the test will be skipped and thus pass
