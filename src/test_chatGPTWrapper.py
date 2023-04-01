@@ -5,7 +5,6 @@ import os
 
 
 # You must login to OpenAI's ChatGPT in Playright's browser in order to run this test
-# You must not have an OpenAI API key defined in the env variables in order to run this test (export  OPENAI_API_KEY="")
 
 current_dir = os.path.dirname(__file__)
 
@@ -20,8 +19,12 @@ with open(file_path_elseConflictTest, 'r') as f:
 # Thus we use the workaround of testing that certain lines are in the output
 def test_handleElseConflictChatGPTWrapper():
     mergeInput = elseConflictTest
-    output0 = handleElseConflict(mergeInput)
-    assert "    main = 5 + 6\n" in output0 or "    main = 5+6\n" in output0
-    assert "list = []\n" in output0
-    assert "    main += 1\n" in output0 or "    main = main + 1\n" in output0
-    assert "    list.append(1)\n" in output0 or "    list += [1]\n" in output0
+    foundConflicts = parser(mergeInput)
+    processedConflicts = differ(foundConflicts, mergeInput)
+    API_KEY = os.getenv("OPENAI_API_KEY")
+    os.environ['OPENAI_API_KEY'] = ''
+    assert "    main = 5 + 6\n" in processedConflicts or "    main = 5+6\n" in processedConflicts
+    assert "list = []\n" in processedConflicts
+    assert "    main += 1\n" in processedConflicts or "    main = main + 1\n" in processedConflicts
+    assert "    list.append(1)\n" in processedConflicts or "    list += [1]\n" in processedConflicts
+    os.environ['OPENAI_API_KEY'] = API_KEY
