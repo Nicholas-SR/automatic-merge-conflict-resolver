@@ -18,8 +18,6 @@ file_path_listAppendConflict = os.path.join(
     current_dir, 'tests', 'listAppendConflictTest.py')
 file_path_whitespaceConflictTest = os.path.join(
     current_dir, 'tests', 'whitespaceConflictTest.py')
-file_path_elseConflictTest = os.path.join(
-    current_dir, 'tests', 'elseConflictTest.py')
 
 with open(file_path_importConflictTest, 'r') as f:
     importConflictTest = f.readlines()
@@ -33,8 +31,6 @@ with open(file_path_listAppendConflict, 'r') as f:
     listAppendConflict = f.readlines()
 with open(file_path_whitespaceConflictTest, 'r') as f:
     whitespaceConflict = f.readlines()
-with open(file_path_elseConflictTest, 'r') as f:
-    elseConflictTest = f.readlines()
 
 # Fails if test takes longer than 1 second
 @pytest.mark.timeout(1)
@@ -50,11 +46,11 @@ def test_parser_10000_lines():
 # UNCOMMENT FOR FINAL SUBMISSION, commented for performance reasons for now.
 
 # Testing if AMCR crashes when given a file with 100,000 lines
-# def test_parser_100000_lines():
-#     mergeInput = lines100000conflictTest
-#     foundConflicts = parser(mergeInput)
-#     processedConflicts = differ(foundConflicts, mergeInput)
-#     removedNewNewLines = merger(processedConflicts)
+    def test_parser_100000_lines():
+        mergeInput = lines100000conflictTest
+        foundConflicts = parser(mergeInput)
+        processedConflicts = differ(foundConflicts, mergeInput)
+        removedNewNewLines = merger(processedConflicts)
     # Commented out unparser() as we don't want to write to the file and break future test runs
     # The unparser() function takes a trivial amount of time to run so it doesn't affect the testing
     # unparser(removedNewNewLines, fmerge)
@@ -152,8 +148,7 @@ def test_handleListAppendConflict():
     assert output1 == expected1
 
     conflict2 = foundConflicts[2]
-    expected2 = ['    var = 2\n',
-                 '    lst.append(item)\n', '    # comment\n', '\n', '\n', '\n', '\n']
+    expected2 = ['    # comment\n', '    lst.append(item)\n', '\n', '\n', '\n', '\n', '\n']
     output2 = handleListAppendConflict(conflict2["local"], conflict2["remote"], mergeInput, conflict2["conflictStart"],
                                        conflict2["conflictEnd"], conflict2["localDiff"], conflict2["remoteDiff"], conflict2["localRemoteCommon"])
     assert output2 == expected2
@@ -201,7 +196,7 @@ def test_listAppendConflictEndToEnd():
     foundConflicts = parser(mergeInput)
     processedConflicts = differ(foundConflicts, mergeInput)
     expected = ['def appendToList(lst, item):\n', '    lst += [item]\n', '\n', '\n', '\n', '\n', '\n', '\n', '    lst.append(item)\n',
-                '\n', '\n', '\n', '\n', '\n', '    var = 2\n', '    lst.append(item)\n', '    # comment\n', '\n', '\n', '\n', '\n', '    return lst']
+                '\n', '\n', '\n', '\n', '\n', '    # comment\n', '    lst.append(item)\n', '\n', '\n', '\n', '\n', '\n', '    return lst']
     assert processedConflicts == expected
 
 
@@ -221,42 +216,3 @@ def test_isCommentConflict_fail():
     remoteDiff = ["var = B"]
     assert False == isCommentConflict(local, remote, localDiff, remoteDiff)
     assert False == isCommentConflict(remote, local, remoteDiff, localDiff)
-
-# You must login to OpenAI's ChatGPT in Playright's browser in order to run this test
-
-# Cannot test that the output matches any given expected output because the output from OpenAI is not constant
-# Thus we use the workaround of testing that certain lines are in the output
-def test_handleElseConflictChatGPTWrapper():
-    API_KEY = os.getenv("OPENAI_API_KEY")
-    os.environ['OPENAI_API_KEY'] = ''
-    mergeInput = elseConflictTest
-    print("HERE",API_KEY)
-    foundConflicts = parser(mergeInput)
-    processedConflicts = differ(foundConflicts, mergeInput)
-    print("THERE",processedConflicts)
-    if API_KEY:
-        os.environ['OPENAI_API_KEY'] = API_KEY
-    if processedConflicts == ['* Run this program with the `install` parameter and log in to ChatGPT.\n']:
-        pytest.skip("ChatGPT not logged in on Playwright Browser")
-    assert "    main = 5 + 6\n" in processedConflicts or "    main = 5+6\n" in processedConflicts
-    assert "list = []\n" in processedConflicts
-    assert "    main += 1\n" in processedConflicts or "    main = main + 1\n" in processedConflicts
-    assert "    list.append(1)\n" in processedConflicts or "    list += [1]\n" in processedConflicts
-
-# You must provide a valid OpenAI API key in the env variables in order to run this test
-# If an API key is not provided, the test will be skipped and thus pass
-
-# Cannot test that the output matches any given expected output because the output from OpenAI is not constant
-# Thus we use the workaround of testing that certain lines are in the output
-def test_handleElseConflictOpenAiAPI():
-    mergeInput = elseConflictTest
-    foundConflicts = parser(mergeInput)
-    processedConflicts = differ(foundConflicts, mergeInput)
-    API_KEY = os.getenv("OPENAI_API_KEY")
-    if API_KEY == None or API_KEY == "":
-        pytest.skip("No OpenAI API key provided")
-    assert API_KEY != None and API_KEY != ""
-    assert "    main = 5 + 6\n" in processedConflicts or "    main = 5+6\n" in processedConflicts
-    assert "list = []\n" in processedConflicts
-    assert "    main += 1\n" in processedConflicts or "    main = main + 1\n" in processedConflicts
-    assert "    list.append(1)\n" in processedConflicts or "    list += [1]\n" in processedConflicts

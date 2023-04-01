@@ -16,7 +16,7 @@ def appendToList(lst, item):
     lst += [item]
     # comment
 =======
-    var = 2
+    # comment
     lst.append(item)
 >>>>>>> import_conflict
     return lst

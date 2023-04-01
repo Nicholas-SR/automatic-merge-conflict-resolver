@@ -68,6 +68,12 @@ def isListAppendConflict(local, remote, localDiff, remoteDiff):
             any(map(lambda l: "+= [" in l, remoteDiff)))
         anyListAppendRemoteDiffAppend = (
             any(map(lambda l: ".append" in l, remoteDiff)))
+        anyNonListAppendConflictLocalDiff = (
+            any(map(lambda l: (not("+= [" in l)) and (not(".append" in l)), localDiff)))
+        anyNonListAppendConflictRemoteDiff = (
+            any(map(lambda l: (not("+= [" in l)) and (not(".append" in l)), remoteDiff)))
+        if (anyNonListAppendConflictLocalDiff or anyNonListAppendConflictRemoteDiff):
+            return False
         return anyListAppendLocal and anyListAppendRemote and ((anyListAppendLocalDiffPlus or anyListAppendRemoteDiffAppend) or (anyListAppendLocalDiffAppend or anyListAppendRemoteDiffPlus))
     except Exception as e:
         print("RECOGNIZER ERROR: ", e, local, remote, localDiff, remoteDiff)
