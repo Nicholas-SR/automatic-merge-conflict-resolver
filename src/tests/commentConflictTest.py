@@ -8,7 +8,6 @@
 
 <<<<<<< HEAD
 # comment 1
-variableA = 1
 # comment 3
 =======
 # comment 2

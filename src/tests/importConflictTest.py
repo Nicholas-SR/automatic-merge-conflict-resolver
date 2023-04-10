@@ -11,10 +11,8 @@ import base64
 import types as f
 import filecmp
 import encodings
-
 =======
 import encodings
-# test
 import filecmp
 >>>>>>> import_conflict
 import calendar

@@ -6,26 +6,33 @@ def isImportConflict(local, remote, localDiff, remoteDiff):
     anyImportRemote = False
     anyImportLocalDiff = False
     anyImportRemoteDiff = False
+    anyNonImportConflictLocalDiff = False
+    anyNonImportConflictRemoteDiff = False
     for line in local:
         if line.strip()[:6] == "import":
             anyImportLocal = True
-            break
     for line in remote:
         if line.strip()[:6] == "import":
             anyImportRemote = True
-            break
     for line in localDiff:
         if line.strip()[:6] == "import":
             anyImportLocalDiff = True
-            break
+        else:
+            if line not in remote:
+                anyNonImportConflictLocalDiff = True
+                break
     for line in remoteDiff:
         if line.strip()[:6] == "import":
             anyImportRemoteDiff = True
-            break
+        else:
+            if line not in local:
+                anyNonImportConflictRemoteDiff = True
+                break
     if localDiff == [] and remoteDiff == []:
         return anyImportLocal and anyImportRemote
+    if anyNonImportConflictLocalDiff or anyNonImportConflictRemoteDiff:
+        return False
     return anyImportLocal and anyImportRemote and (anyImportLocalDiff or anyImportRemoteDiff)
-
 
 
 def isCommentConflict(local, remote, localDiff, remoteDiff):
@@ -33,24 +40,32 @@ def isCommentConflict(local, remote, localDiff, remoteDiff):
     anyCommentRemote = False
     anyCommentLocalDiff = False
     anyCommentRemoteDiff = False
+    anyNonCommentConflictLocalDiff = False
+    anyNonCommentConflictRemoteDiff = False
     for line in local:
-        if line.strip()[0] == "#":
+        if line.strip()[:1] == "#":
             anyCommentLocal = True
-            break
     for line in remote:
-        if line.strip()[0] == "#":
+        if line.strip()[:1] == "#":
             anyCommentRemote = True
-            break
     for line in localDiff:
-        if line.strip()[0] == "#":
+        if line.strip()[:1] == "#":
             anyCommentLocalDiff = True
-            break
+        else:
+            if line not in remote:
+                anyNonCommentConflictLocalDiff = True
+                break
     for line in remoteDiff:
-        if line.strip()[0] == "#":
+        if line.strip()[:1] == "#":
             anyCommentRemoteDiff = True
-            break
+        else:
+            if line not in remote:
+                anyNonCommentConflictRemoteDiff = True
+                break
     if localDiff == [] and remoteDiff == []:
         return anyCommentLocal and anyCommentRemote
+    if anyNonCommentConflictLocalDiff or anyNonCommentConflictRemoteDiff:
+        return False
     return anyCommentLocal and anyCommentRemote and (anyCommentLocalDiff or anyCommentRemoteDiff)
 
 

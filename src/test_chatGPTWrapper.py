@@ -32,4 +32,3 @@ def test_handleElseConflictChatGPTWrapper():
     assert "list = []\n" in processedConflicts
     assert "    main += 1\n" in processedConflicts or "    main = main + 1\n" in processedConflicts
     assert "    list.append(1)\n" in processedConflicts or "    list += [1]\n" in processedConflicts
-test_handleElseConflictChatGPTWrapper()
