@@ -21,7 +21,7 @@ def main():
     # Loop through the specified number of elements
     for i in range(num_of_elements):
         random_number = random.randint(1, 100)
-        numbers.append(random_number)
+        numbers.append(random_number+1)
         print(f"Adding {random_number} to the list...")
         time.sleep(0.5)
 
