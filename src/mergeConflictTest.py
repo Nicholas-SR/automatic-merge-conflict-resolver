@@ -37,9 +37,10 @@ def main():
     print(f"The average of the numbers is: {round(average_of_numbers, 2)}")
 
     # Save the list of random numbers as a JSON file
-    with open("random_numbers.json", "w") as outfile:
-        json.dump(numbers, outfile)
-    print("\nThe list of random numbers has been saved as 'random_numbers.json'.")
+    with open("random_numbers3.json", "wr") as outfile:
+        jsonOutput = json.dump(numbers, outfile)
+    print("\nThe list of random numbers has been saved as 'random_numbers3.json'.")
+    jsonOutput.append('test')
 
 if __name__ == "__main__":
     main()
