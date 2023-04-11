@@ -5,7 +5,9 @@ import dataclasses
 import zipapp
 import email
 import b
+import d
 import absl
+import c
 import a
 
 list = []
