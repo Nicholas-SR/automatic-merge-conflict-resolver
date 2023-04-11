@@ -1,11 +1,12 @@
-import random
-import time
-import os
-import json
 import math
+import sys
+import random
+import os
+import time
+import json
 
 def main():
-    # Clear terminal screen
+    # Clear the terminal screen
     os.system('cls' if os.name == 'nt' else 'clear')
 
     # Print a welcome message and wait for a second
@@ -21,7 +22,7 @@ def main():
     # Loop through the specified number of elements
     for i in range(num_of_elements):
         random_number = random.randint(1, 100)
-        numbers.append(random_number+1)
+        numbers.append(random_number)
         print(f"Adding {random_number} to the list...")
         time.sleep(0.5)
 
