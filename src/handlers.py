@@ -69,7 +69,6 @@ def handleElseConflict(input):
         else:
             raise Exception("Unofficial ChatGPT Wrapper is not setup correctly or it has been deprecated.")
     else:
-        print("Using official OpenAI ChatGPT API")
         openai.api_key = API_KEY
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
