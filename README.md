@@ -16,7 +16,7 @@ Every developer has felt the so-called “merge conflict panic”: your code wor
 4. Alternatively, if you do not have OpenAI API access, configure ChatGPT-Wrapper:
 ```chatgpt install```
 
-# Execution
+# Usage
 After obtaining a merge conflict, run this command:
 ```git mergetool -t amcr```
 
