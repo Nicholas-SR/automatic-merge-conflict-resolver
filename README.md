@@ -21,7 +21,7 @@ After obtaining a merge conflict, run this command:
 ```git mergetool -t amcr```
 
 You also specify a path to resolve a conflict in a specific file or folder:
-```git mergetool -t amcr PATH/TO/FILE/WITH/MERGE/CONFLICT.py```
+```git mergetool -t amcr "PATH/TO/FILE/WITH/MERGE/CONFLICT.py"```
 
 # Development
 An alias is included to speed up development and testing. It aborts the merge, starts a new merge, then runs the mergetool:
