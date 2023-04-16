@@ -3,6 +3,12 @@ Automatic Merge Conflict Resolver (AMCR) is a program that automatically resolve
 
 Every developer has felt the so-called “merge conflict panic”: your code works well, but when you merge it into the main branch, you get a merge conflict and your code is now full of conflict markers. Many of these merge conflicts are straightforward and thus can be resolved automatically. AMCR uses pattern matching to identify certain merge conflict types, then a handler resolves the merge conflict and writes the result to the original file. If a merge conflict is too complex and does not match the types of conflicts AMCR can handle, a query is made to a large language model (GPT-3) which will attempt to resolve it. This tool significantly enhances developers' efficiency by eliminating the need for manual intervention in resolving each merge conflict, thereby streamlining a traditionally repetitive task.
 
+
+Demo:
+
+<img src="demo.gif" alt="GIF of Demonstration" height="500">
+
+
 # Setup
 1. Run the following command in the root directory:
 ```git config --local include.path ../.gitconfig```
